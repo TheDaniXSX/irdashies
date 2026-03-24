@@ -28,6 +28,9 @@ export const Relative = () => {
   const numCarClasses = useWeekendInfoNumCarClasses();
   const isMultiClass = (numCarClasses ?? 0) > 1;
   const isSessionVisible = useSessionVisibility(settings?.sessionVisibility);
+  const isCompoundEnabled = settings?.compound?.enabled ?? true;
+  const shouldProvideCarIdForCells =
+    (settings?.carManufacturer?.enabled ?? true) || isCompoundEnabled;
 
   usePitLapStoreUpdater();
 
@@ -74,7 +77,7 @@ export const Relative = () => {
           config={settings}
           carNumber={(settings?.carNumber?.enabled ?? true) ? '' : undefined}
           flairId={(settings?.countryFlags?.enabled ?? true) ? 0 : undefined}
-          carId={(settings?.carManufacturer?.enabled ?? true) ? 0 : undefined}
+          carId={shouldProvideCarIdForCells ? 0 : undefined}
           license={undefined}
           rating={undefined}
           currentSessionType=""
@@ -87,7 +90,7 @@ export const Relative = () => {
           onPitRoad={false}
           onTrack={true}
           radioActive={false}
-          tireCompound={settings?.compound?.enabled ? 0 : undefined}
+          tireCompound={isCompoundEnabled ? 0 : undefined}
           highlightColor={highlightColor}
           dnf={false}
           repair={false}
@@ -125,7 +128,7 @@ export const Relative = () => {
             config={settings}
             carNumber={(settings?.carNumber?.enabled ?? true) ? '' : undefined}
             flairId={(settings?.countryFlags?.enabled ?? true) ? 0 : undefined}
-            carId={(settings?.carManufacturer?.enabled ?? true) ? 0 : undefined}
+            carId={shouldProvideCarIdForCells ? 0 : undefined}
             license={undefined}
             rating={undefined}
             currentSessionType=""
@@ -138,7 +141,7 @@ export const Relative = () => {
             onPitRoad={false}
             onTrack={true}
             radioActive={false}
-            tireCompound={settings?.compound?.enabled ? 0 : undefined}
+            tireCompound={isCompoundEnabled ? 0 : undefined}
             lastLap={undefined}
             highlightColor={highlightColor}
             dnf={false}
@@ -188,9 +191,7 @@ export const Relative = () => {
           lastTimeState={
             settings?.lastTime?.enabled ? result.lastTimeState : undefined
           }
-          tireCompound={
-            settings?.compound?.enabled ? result.tireCompound : undefined
-          }
+          tireCompound={isCompoundEnabled ? result.tireCompound : undefined}
           carId={result.carId}
           lastPitLap={result.lastPitLap}
           lastLap={result.lastLap}
@@ -223,6 +224,8 @@ export const Relative = () => {
     highlightColor,
     hideCarManufacturer,
     isTeamRacing,
+    isCompoundEnabled,
+    shouldProvideCarIdForCells,
   ]);
 
   if (!isSessionVisible) return <></>;

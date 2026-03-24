@@ -113,37 +113,38 @@ export const useDrivers = () => {
 };
 
 export const useCarState = () => {
-  const carIdxTrackSurface = useTelemetry('CarIdxTrackSurface');
-  const carIdxOnPitRoad = useTelemetry<boolean[]>('CarIdxOnPitRoad');
-  const carIdxTireCompound = useTelemetry<number[]>('CarIdxTireCompound');
-  const carIdxSessionFlags = useTelemetry<number[]>('CarIdxSessionFlags');
+  const carIdxTrackSurface = useTelemetryValues<number[]>('CarIdxTrackSurface');
+  const carIdxOnPitRoad = useTelemetryValues<boolean[]>('CarIdxOnPitRoad');
+  const carIdxTireCompound = useTelemetryValues<number[]>('CarIdxTireCompound');
+  const carIdxSessionFlags = useTelemetryValues<number[]>('CarIdxSessionFlags');
 
   return useMemo(() => {
-    return (
-      carIdxTrackSurface?.value?.map((onTrack, index) => ({
-        carIdx: index,
-        onTrack: onTrack > -1,
-        onPitRoad: carIdxOnPitRoad?.value?.[index],
-        tireCompound: carIdxTireCompound?.value?.[index],
-        dnf: !!(
-          (carIdxSessionFlags?.value?.[index] ?? 0) & GlobalFlags.Disqualify
-        ),
-        repair: !!(
-          (carIdxSessionFlags?.value?.[index] ?? 0) & GlobalFlags.Repair
-        ),
-        penalty: !!(
-          (carIdxSessionFlags?.value?.[index] ?? 0) & GlobalFlags.Black
-        ),
-        slowdown: !!(
-          (carIdxSessionFlags?.value?.[index] ?? 0) & GlobalFlags.Furled
-        ),
-      })) ?? []
+    const maxCarCount = Math.max(
+      carIdxTrackSurface?.length ?? 0,
+      carIdxOnPitRoad?.length ?? 0,
+      carIdxTireCompound?.length ?? 0,
+      carIdxSessionFlags?.length ?? 0
     );
+
+    if (maxCarCount === 0) {
+      return [];
+    }
+
+    return Array.from({ length: maxCarCount }, (_, index) => ({
+      carIdx: index,
+      onTrack: (carIdxTrackSurface?.[index] ?? -1) > -1,
+      onPitRoad: carIdxOnPitRoad?.[index] ?? false,
+      tireCompound: carIdxTireCompound?.[index],
+      dnf: !!((carIdxSessionFlags?.[index] ?? 0) & GlobalFlags.Disqualify),
+      repair: !!((carIdxSessionFlags?.[index] ?? 0) & GlobalFlags.Repair),
+      penalty: !!((carIdxSessionFlags?.[index] ?? 0) & GlobalFlags.Black),
+      slowdown: !!((carIdxSessionFlags?.[index] ?? 0) & GlobalFlags.Furled),
+    }));
   }, [
-    carIdxTrackSurface?.value,
-    carIdxOnPitRoad?.value,
-    carIdxTireCompound?.value,
-    carIdxSessionFlags?.value,
+    carIdxTrackSurface,
+    carIdxOnPitRoad,
+    carIdxTireCompound,
+    carIdxSessionFlags,
   ]);
 };
 
