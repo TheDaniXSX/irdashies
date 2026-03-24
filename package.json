@@ -1,11 +1,11 @@
 {
-  "name": "irdashies",
-  "productName": "irdashies",
-  "version": "0.0.41",
-  "description": "iRacing Dashboards & Overlays",
+  "name": "appiracing",
+  "productName": "AppiRacing",
+  "version": "0.0.42",
+  "description": "AppiRacing Dashboards & Overlays",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tariknz/irdashies"
+    "url": "https://github.com/TheDaniXSX/irdashies"
   },
   "main": ".vite/build/main.js",
   "scripts": {

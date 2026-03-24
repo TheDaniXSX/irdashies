@@ -184,6 +184,17 @@ export const BlindSpotMonitorSettings = () => {
                   step={0.1}
                   onChange={(v) => handleConfigChange({ distBehind: v })}
                 />
+
+                <SettingDivider />
+
+                <SettingToggleRow
+                  title="Fallback When Spotter Is Clear"
+                  description="Use nearby car proximity as a backup when iRacing does not provide left/right spotter signals."
+                  enabled={settings.config.enableProximityFallback ?? true}
+                  onToggle={(newValue) =>
+                    handleConfigChange({ enableProximityFallback: newValue })
+                  }
+                />
               </SettingsSection>
             )}
 

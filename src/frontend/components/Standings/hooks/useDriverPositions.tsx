@@ -1,3 +1,4 @@
+// Cambios: Se añade cálculo de iRating para Relative en carreras oficiales reutilizando augmentStandingsWithIRating, manteniendo el orden de filas actual y sin alterar Practice.
 import { useMemo } from 'react';
 import {
   useTelemetryValue,
@@ -10,11 +11,17 @@ import {
   usePrevCarTrackSurface,
   useFocusCarIdx,
   useSessionPositions,
+  useSessionIsOfficial,
   useTelemetryValues,
   useTelemetryValuesRounded,
 } from '@irdashies/context';
 
-import { Standings, type LastTimeState } from '../createStandings';
+import {
+  Standings,
+  type LastTimeState,
+  augmentStandingsWithIRating,
+  groupStandingsByClass,
+} from '../createStandings';
 import { GlobalFlags, SessionState } from '@irdashies/types';
 import { useDriverLivePositions } from './useDriverLivePositions';
 import { useRelativeSettings } from './useRelativeSettings';
@@ -155,6 +162,7 @@ export const useDriverStandings = () => {
   // Use focus car index which handles spectator mode (uses CamCarIdx when spectating)
   const playerCarIdx = useFocusCarIdx();
   const sessionType = useCurrentSessionType();
+  const isOfficial = useSessionIsOfficial();
   const qualifyingPositions = useSessionQualifyingResults();
   const sessionState = useTelemetryValue('SessionState') ?? 0;
   const sessionNum = useTelemetryValue('SessionNum');
@@ -293,7 +301,38 @@ export const useDriverStandings = () => {
       };
     });
 
-    return standings.filter((s) => !!s).sort((a, b) => a.position - b.position);
+    const sortedStandings = standings
+      .filter(
+        (
+          standing
+        ): standing is Exclude<(typeof standings)[number], undefined> =>
+          standing !== undefined
+      )
+      .sort(
+        (a, b) =>
+          (a.position ?? Number.MAX_SAFE_INTEGER) -
+          (b.position ?? Number.MAX_SAFE_INTEGER)
+      );
+
+    if (sessionType !== 'Race' || !isOfficial) {
+      return sortedStandings;
+    }
+
+    const groupedByClass = groupStandingsByClass(sortedStandings);
+    const iratingAugmentedGroupedByClass =
+      augmentStandingsWithIRating(groupedByClass);
+
+    const iratingChangeMap = new Map<number, number | undefined>();
+    for (const [, classStandings] of iratingAugmentedGroupedByClass) {
+      for (const standing of classStandings) {
+        iratingChangeMap.set(standing.carIdx, standing.iratingChange);
+      }
+    }
+
+    return sortedStandings.map((standing) => ({
+      ...standing,
+      iratingChange: iratingChangeMap.get(standing.carIdx),
+    }));
   }, [
     sessionPositions,
     sessionState,
@@ -303,6 +342,7 @@ export const useDriverStandings = () => {
     playerCarIdx,
     drivers,
     sessionType,
+    isOfficial,
     useLivePositionStandings,
     radioTransmitCarIdx,
     driverLivePositions,

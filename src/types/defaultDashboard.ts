@@ -330,7 +330,7 @@ export const defaultDashboard: {
           practice: true,
           offlineTesting: true,
         },
-      }
+      },
     },
     {
       id: 'relative',
@@ -802,6 +802,7 @@ export const defaultDashboard: {
       config: {
         distAhead: 4.5,
         distBehind: 4.5,
+        enableProximityFallback: true,
         background: {
           opacity: 30,
         },

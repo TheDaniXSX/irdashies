@@ -9,6 +9,7 @@ export const OverlayContainer = memo(() => {
   const {
     currentDashboard,
     editMode,
+    isDemoMode,
     onDashboardUpdated,
     bridge,
     containerBoundsInfo,
@@ -88,6 +89,12 @@ export const OverlayContainer = memo(() => {
           return null;
         }
 
+        // Input should remain previewable in edit/demo even when iRacing isn't running.
+        const renderInputInPreviewMode =
+          widget.id === 'input' && (editMode || isDemoMode);
+        const shouldRenderWidgetContent =
+          running || widget.alwaysEnabled || renderInputInPreviewMode;
+
         return (
           <WidgetContainer
             key={widget.id}
@@ -96,7 +103,7 @@ export const OverlayContainer = memo(() => {
             zIndex={index + 1}
             onLayoutChange={handleLayoutChange}
           >
-            {running || widget.alwaysEnabled ? (
+            {shouldRenderWidgetContent ? (
               <WidgetComponent {...widget.config} />
             ) : null}
           </WidgetContainer>

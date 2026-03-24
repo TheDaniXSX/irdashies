@@ -37,7 +37,7 @@ export const AboutSettings = () => {
         <div>
           <h2 className="text-xl font-bold mb-4">About</h2>
           <p className="text-slate-300">
-            iRacing Dashies is an open-source iRacing Dashboards & Overlays
+            AppiRacing is an open-source iRacing Dashboards & Overlays
             application that helps you customize and enhance your racing
             experience.
           </p>
@@ -52,7 +52,7 @@ export const AboutSettings = () => {
           <h3 className="text-lg font-semibold">Connect</h3>
 
           <a
-            href="https://github.com/tariknz/irdashies"
+            href="https://github.com/TheDaniXSX/irdashies"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors w-fit"
@@ -80,7 +80,7 @@ export const AboutSettings = () => {
 
           <div className="text-sm text-slate-400">
             <div className="mb-2">
-              irDashies collects limited, anonymous usage data to help us
+              AppiRacing collects limited, anonymous usage data to help us
               improve the application, identify issues, and prioritise future
               development.
             </div>
@@ -197,12 +197,12 @@ export const AboutSettings = () => {
                 issue:
               </p>
               <a
-                href="https://github.com/tariknz/irdashies"
+                href="https://github.com/TheDaniXSX/irdashies"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-300 hover:text-white transition-colors underline"
               >
-                https://github.com/tariknz/irdashies
+                https://github.com/TheDaniXSX/irdashies
               </a>
             </div>
           </div>
