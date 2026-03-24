@@ -239,7 +239,7 @@ export interface InputConfig {
     unit: 'mph' | 'km/h' | 'auto' | 'none';
     showspeed: boolean;
   };
-  abs?: { enabled: boolean };
+  abs: { enabled: boolean };
   steer: {
     enabled: boolean;
     config: SteerConfig;
